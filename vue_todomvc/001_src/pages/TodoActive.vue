@@ -1,0 +1,124 @@
+<template>
+  <ul>
+    <li
+      v-for="todoA in todoAs"
+      :key="todoA.id"
+      class="text"
+      :class="todoA.done ? 'item' : ''"
+    >
+      <input
+        type="checkbox"
+        @click="handleCheck(todoA.id, $event)"
+        :class="todoA.done ? 'IsChecked' : ''"
+      />
+        <span  @dblclick="handleEdit(todoA)">{{ todoA.title }}</span>
+         <input v-show="todoA.isEdit" :value="todoA.title" type="text"  @blur="handleBlur(todoA,$event)"/>
+
+         <span @click="handleDelete(todoA)" class="err"></span>
+
+
+     
+    </li>
+  </ul>
+</template>
+
+<script>
+export default {
+  name: "TodoActive",
+  props: ["todos", "checkTodo","editTodo","deleteTodo"],
+  computed: {
+    todoAs() {
+      return this.todos.filter((t) => !t.done);
+     
+    },
+  },
+  methods: {
+    handleCheck(id, e) {
+      this.checkTodo(id, e.target.checked);
+    },
+    handleEdit(todoA){
+        todoA.isEdit = true;
+    },
+    handleBlur(todoA,e){
+        todoA.isEdit = false;
+        this.editTodo(todoA.id,e.target.value)
+    },
+    handleDelete(todoA){
+      this.deleteTodo(todoA.id)
+    }
+  },
+};
+</script>
+
+<style scoped>
+
+.err {
+    position: absolute;
+    top: 21px;
+    right: 27px;
+    width: 15px;
+    height: 15px;
+    background-image: url(../assets/err.png);
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+    display: none;
+    z-index: 1;
+}
+
+.text:hover .err{
+    display: block;
+}
+
+/* 双击编辑 */
+li input[type="text"] {
+  font-size: 24px;
+  position: absolute;
+  top: 0px;
+  left: 58px;
+  outline: none;
+  border: none;
+  height: 65px;
+  width: 484px;
+  border: 1px solid #999;
+  box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  z-index: 2;
+}
+input[type="checkbox"] {
+  position: absolute;
+  top: 15px;
+  left: 16px;
+  outline: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  border: 1px solid rgb(230, 230, 230);
+  -webkit-appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  -ms-appearance: none;
+}
+
+.IsChecked {
+  background-size: 85%;
+  background-repeat: no-repeat;
+  background-position: 3px 6px;
+  background-image: url(../assets/check.png);
+}
+
+.text {
+  position: relative;
+  padding: 15px 15px 15px 60px;
+  font-size: 24px;
+  border-bottom: 1px solid #ede;
+  font-family: inherit;
+  font-weight: inherit;
+  line-height: 1.4em;
+}
+
+.item {
+  text-decoration: line-through;
+  color: rgb(230, 230, 230);
+}
+</style>
