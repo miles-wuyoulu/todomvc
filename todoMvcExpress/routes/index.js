@@ -1,12 +1,17 @@
 var express = require('express');
 const { response } = require('../app');
+var model = require("../model")
 var router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  // res.render('index', { title: 'Express' });
-  res.send(JSON.stringify(todos))
+  model.connect(async function(db){
+    let findResult = await db.collection('todos').find({}).toArray();
+    // console.log('Found documents =>', findResult);
+    res.send(JSON.stringify(findResult))
+  })
 });
+
 
 router.post('/', (req, res, next) => {
   console.log(req.body)
