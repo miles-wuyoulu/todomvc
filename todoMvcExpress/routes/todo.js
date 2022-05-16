@@ -4,13 +4,23 @@ var router = express.Router();
 
 var model = require("../model")
 
+router.get('/', function (req, res, next) {
+  
+    model.connect(async function(db){
+      let findResult = await db.collection('todos').find({user:req.cookies.user}).toArray();
+      // console.log('Found documents =>', findResult);
+      res.send(JSON.stringify(findResult))
+    })
+  });
+
 //   添加事项
 router.post('/add', (req, res, next) => {
     console.log(req.body)
     model.connect(async function (db) {
         // let findResult = await db.collection('todos').find({}).toArray();
         let insertResult = await db.collection('todos').insertOne(req.body);
-        console.log('Found documents =>', insertResult);
+          let updateResult = await db.collection('todos').updateOne({ id: req.body.id }, { $set: { user: req.cookies.user } });
+        console.log('Found documents =>', insertResult,updateResult);
     })
 })
 
@@ -21,7 +31,7 @@ router.post('/add', (req, res, next) => {
 router.post('/check', (req, res, next) => {
     console.log(req.body)
     model.connect(async function (db) {
-        let updateResult = await db.collection('todos').updateOne({ id: req.body.id }, { $set: { done: req.body.done } });
+        let updateResult = await db.collection('todos').updateOne({ id: req.body.id ,user:req.cookies.user}, { $set: { done: req.body.done } });
         console.log('Found documents =>', updateResult);
     })
 })
@@ -31,7 +41,7 @@ router.post('/check', (req, res, next) => {
 router.post('/edit', (req, res, next) => {
     console.log(req.body)
     model.connect(async function (db) {
-        let updateResult = await db.collection('todos').updateOne({ id: req.body.id }, { $set: { title: req.body.title } });
+        let updateResult = await db.collection('todos').updateOne({ id: req.body.id ,user:req.cookies.user}, { $set: { title: req.body.title } });
         console.log('Found documents =>', updateResult);
     })
 })
@@ -40,7 +50,7 @@ router.post('/edit', (req, res, next) => {
 router.post('/delete', (req, res, next) => {
     console.log(req.body)
     model.connect(async function (db) {
-        let deleteResult = await db.collection('todos').deleteOne({ id: req.body.id });
+        let deleteResult = await db.collection('todos').deleteOne({ id: req.body.id ,user:req.cookies.user});
         console.log('Deleted documents =>', deleteResult);
     })
 })
@@ -49,7 +59,7 @@ router.post('/delete', (req, res, next) => {
 router.post('/clear', (req, res, next) => {
     console.log(req.body)
     model.connect(async function (db) {
-        let deleteResult = await db.collection('todos').deleteMany({ done: true });
+        let deleteResult = await db.collection('todos').deleteMany({ done: true ,user:req.cookies.user});
         console.log('Deleted documents =>', deleteResult);
     })
 })
@@ -59,7 +69,7 @@ router.post('/clear', (req, res, next) => {
 router.post('/choose', (req, res, next) => {
     console.log(req.body)
     model.connect(async function (db) {
-        let updateResult = await db.collection('todos').updateMany({  }, { $set: { done: !req.body.done } });
+        let updateResult = await db.collection('todos').updateMany({ user:req.cookies.user }, { $set: { done: !req.body.done } });
         console.log('Found documents =>', updateResult);
     })
 })

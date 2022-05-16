@@ -19,9 +19,9 @@
       <footer v-show="$store.getters.todosLength">
         <span>{{ $store.getters.todoLeft }} items left</span>
         <ul>
-          <li><router-link to="/">All</router-link></li>
-          <li><router-link to="/active">Active</router-link></li>
-          <li><router-link to="/completed">Completed</router-link></li>
+          <li><router-link to="/mytodo/todoall">All</router-link></li>
+          <li><router-link to="/mytodo/active">Active</router-link></li>
+          <li><router-link to="/mytodo/completed">Completed</router-link></li>
         </ul>
         <span @click="clearCompTodo"> Clear completed </span>
       </footer>
@@ -120,7 +120,8 @@ export default {
   },
   mounted(){
     this.$getReq().then(res=>{
-      this.$store.state.todos = res
+      console.log(res)
+      this.$store.state.todos = res.reverse()
     })
   }
 };

@@ -21,14 +21,9 @@ const mutations = {
         };
         state.todos.unshift(todo);
         e.target.value = "";
-
         // 更新后台
-        let obj = {
-            type:'add',
-            todo
-        }
-        postReq(obj)
-        
+        postReq('/add', todo)
+
     },
     // 选中或取消
     CHECKTODO(state, obj) {
@@ -36,12 +31,7 @@ const mutations = {
             if (element.id === obj.id) {
                 element.done = obj.done;
                 // 更新后台
-                let ob = {
-                    type:"check",
-                    todo:element
-                }
-                postReq(ob)
-                console.log(obj.done)
+                postReq('/check', element)
                 return
             }
         });
@@ -51,12 +41,8 @@ const mutations = {
         state.todos.forEach((element) => {
             if (element.id === obj.id) {
                 element.title = obj.value;
-                 // 更新后台
-                 let ob = {
-                    type:"edit",
-                    todo:element
-                }
-                postReq(ob)
+                // 更新后台
+                postReq('/edit', element)
                 return
             }
         });
@@ -65,41 +51,30 @@ const mutations = {
     DELETETODO(state, id) {
         state.todos = state.todos.filter((v) => v.id != id);
         // 更新后台
-        let ob = {
-            type:"delete",
-            todo:id
-        }
-        postReq(ob)
+        postReq('/delete', { id })
     },
 
     // 清除已完成列表
     CLEARCOMPTODO(state) {
         state.todos = state.todos.filter((v) => !v.done);
         // 更新后台
-        let ob = {
-            type:"clearcomp",
-        }
-        postReq(ob)
-      },
+        postReq('/clear', {})
+    },
 
     //全选或取消全选
-    CHOOSEALL(state,done){
+    CHOOSEALL(state, done) {
         state.todos.forEach((e) => {
             e.done = !done;
-          });
-            // 更新后台
-          let ob = {
-            type:"chooseall",
-            todo:done
-        }
-        postReq(ob)
+        });
+        // 更新后台
+        postReq('/choose', { done })
     }
 
 }
 
 const state = {
     // todos: JSON.parse(localStorage.getItem('todos')) || [],
-    todos:[]
+    todos: []
 }
 
 const getters = {

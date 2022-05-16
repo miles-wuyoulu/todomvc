@@ -10,7 +10,8 @@
       <el-container>
         <el-header>todos</el-header>
         <el-main>
-          <todo-main-part />
+          <!-- <todo-main-part /> -->
+         <todo-main-part></todo-main-part>
         </el-main>
 
         <!-- 底部说明文字 -->
@@ -31,7 +32,7 @@ import TodoMainPart from "./TodoMainPart.vue";
 export default {
   name: "MyTodo",
   components: { TodoAside, TodoMainPart },
-  
+
   //   下面代码是当屏幕大小发生改变时左侧边栏动画推出
   data() {
     return {
